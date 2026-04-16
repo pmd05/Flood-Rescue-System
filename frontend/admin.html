@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Khẩn Cấp Bão Lũ</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <!-- Tích hợp Icon SVG Cao Cấp -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js cho tính năng Thống Kê Tổng Lực -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Chế độ Dark Mode Premium 🌌 */
+    :root {
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --primary-glow: rgba(139, 92, 246, 0.4);
+      --secondary: #38bdf8;
+      --danger: #ef4444;
+      --danger-glow: rgba(239, 68, 68, 0.4);
+      --success: #10b981;
+      --bg-base: #030712;
+      --surface-1: rgba(17, 24, 39, 0.7);
+      --surface-2: rgba(31, 41, 55, 0.6);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      background-color: var(--bg-base) !important;
+      color: var(--text-main) !important;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Mesh Gradient Animation Dưới Nền */
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(139, 92, 246, 0.15) 0%, transparent 35%),
+        radial-gradient(circle at 85% 90%, rgba(56, 189, 248, 0.1) 0%, transparent 35%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+      filter: blur(60px);
+      animation: ambientFlow 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientFlow {
+      0% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(1.1) translate(20px, -20px);
+      }
+    }
+
+    .shell {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 24px 60px;
+      animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Bảng Hero Đỉnh Cao 👑 */
+    .hero {
+      position: relative;
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(76, 29, 149, 0.4), rgba(15, 23, 42, 0.8));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 40px 45px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(139, 92, 246, 0.1);
+      margin-bottom: 40px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-icon-bg {
+      position: absolute;
+      top: -40px;
+      right: -20px;
+      color: rgba(139, 92, 246, 0.08);
+      transform: rotate(-15deg);
+      pointer-events: none;
+    }
+
+    .hero-icon-bg svg {
+      width: 350px;
+      height: 350px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .badge-premium {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: #c4b5fd;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .logout-btn {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 14px 28px;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px var(--danger-glow);
+    }
+
+    /* Thống kê hệ thống */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--surface-1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 28px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(139, 92, 246, 0.5);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(139, 92, 246, 0.1);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      transition: 0.3s;
+    }
+
+    .stat-card.total::before {
+      background: linear-gradient(90deg, #8b5cf6, #38bdf8);
+    }
+
+    .stat-card.citizen::before {
+      background: linear-gradient(90deg, #10b981, #34d399);
+    }
+
+    .stat-card.rescue::before {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    .stat-card.other::before {
+      background: linear-gradient(90deg, #64748b, #94a3b8);
+    }
+
+    .stat-card:hover::before {
+      height: 6px;
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .stat-card.total .stat-icon {
+      color: #a78bfa;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .stat-card.citizen .stat-icon {
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .stat-card.rescue .stat-icon {
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .stat-card.other .stat-icon {
+      color: #94a3b8;
+      background: rgba(100, 116, 139, 0.15);
+      border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    /* Vùng CSS Biểu đồ Thống Kê Tổng Lực */
+    .dashboard-charts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .chart-card {
+      background: var(--surface-1);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-color);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .chart-card h3 {
+      font-size: 1.1rem;
+      margin: 0 0 16px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .chart-card h3 i { color: var(--primary); width: 18px; }
+
+    /* Bố cục Grid Main Content */
+    .grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Thẻ Chung */
+    .card {
+      background: var(--surface-1);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--border-color);
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .card header {
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card h3 i {
+      color: var(--primary);
+    }
+
+    .card p.sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Form UI */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .form-group label i {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper i.icon-prefix {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    input,
+    select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      border-radius: 16px;
+      padding: 16px 16px 16px 48px;
+      /* Padding for icon */
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      appearance: none;
+    }
+
+    select {
+      padding: 16px;
+      appearance: auto;
+    }
+
+    /* No prefix icon for select typically, default padding */
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    input:focus+i.icon-prefix {
+      color: var(--primary);
+    }
+
+    select option {
+      background: #0f172a;
+      color: #fff;
+      padding: 10px;
+    }
+
+    /* Team Field Animation */
+    .truong-an {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .truong-an.hien-thi {
+      max-height: 120px;
+      opacity: 1;
+      margin-top: 5px;
+    }
+
+    /* Buttons */
+    .actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px var(--primary-glow);
+      background: linear-gradient(135deg, #a78bfa, var(--primary));
+    }
+
+    .btn-soft {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+    }
+
+    .btn-soft:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Notice Toast/Alert */
+    .notice {
+      padding: 16px 20px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      animation: alertIn 0.3s ease;
+    }
+
+    @keyframes alertIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notice.success {
+      display: flex;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .notice.error {
+      display: flex;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    /* Vùng hiển thị list user */
+    .user-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(139, 92, 246, 0.15);
+      color: #c4b5fd;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      text-transform: uppercase;
+    }
+
+    #userList {
+      max-height: 650px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    #userList::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #userList::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+
+    #userList::-webkit-scrollbar-thumb {
+      background: rgba(139, 92, 246, 0.3);
+      border-radius: 10px;
+    }
+
+    #userList::-webkit-scrollbar-thumb:hover {
+      background: rgba(139, 92, 246, 0.5);
+    }
+
+    .user-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .user-card:hover {
+      transform: translateX(8px);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: -5px 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .user-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .user-info {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(56, 189, 248, 0.2));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e2e8f0;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .user-details h4 {
+      margin: 0 0 4px;
+      font-size: 1.15rem;
+      color: #f8fafc;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-details .meta {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .role-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.1);
+      color: #7dd3fc;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .role-admin {
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .role-rescue {
+      background: rgba(245, 158, 11, 0.1);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .user-card-actions {
+      display: flex;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-edit {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-edit:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: #fff;
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+      color: #fff;
+      border-color: rgba(239, 68, 68, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .empty {
+      text-align: center;
+      color: #64748b;
+      padding: 50px 20px;
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .empty i {
+      width: 48px;
+      height: 48px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 1200px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .dashboard-charts {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        padding: 16px;
+      }
+
+      .hero {
+        padding: 25px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-charts {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .user-card-top {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .role-chip {
+        margin-left: 66px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-mesh"></div>
+
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-icon-bg">
+        <i data-lucide="shield-check"></i>
+      </div>
+      <div class="hero-content">
+        <div class="badge-premium"><i data-lucide="zap" width="16" height="16"></i> Cấp Bậc: Tối Cao</div>
+        <h1>Trung Tâm Quản Trị Hệ Thống</h1>
+        <p>Kiểm soát toàn diện nền tảng cứu hộ. Khởi tạo tài khoản, phân bổ lực lượng, và giám sát toàn bộ hoạt động của
+          các thành viên trực thuộc.</p>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <i data-lucide="log-out"></i> Rời Trạm Cấp Cao
+      </button>
+    </section>
+
+    <section class="stats">
+      <div class="stat-card total">
+        <div class="stat-header">
+          <div class="stat-label">Tổng nhân sự</div>
+          <div class="stat-icon"><i data-lucide="users"></i></div>
+        </div>
+        <div class="stat-value" id="tongNguoiDung">0</div>
+      </div>
+      <div class="stat-card citizen">
+        <div class="stat-header">
+          <div class="stat-label">Công dân</div>
+          <div class="stat-icon"><i data-lucide="home"></i></div>
+        </div>
+        <div class="stat-value" id="soNguoiDan">0</div>
+      </div>
+      <div class="stat-card rescue">
+        <div class="stat-header">
+          <div class="stat-label">Lực lượng cứu hộ</div>
+          <div class="stat-icon"><i data-lucide="life-buoy"></i></div>
+        </div>
+        <div class="stat-value" id="soDoiCuuHo">0</div>
+      </div>
+      <div class="stat-card other">
+        <div class="stat-header">
+          <div class="stat-label">Ban điều hành</div>
+          <div class="stat-icon"><i data-lucide="shield-half"></i></div>
+        </div>
+        <div class="stat-value" id="soVaiTroKhac">0</div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Thống Kê Biểu Đồ Tổng Lực -->
+    <section class="dashboard-charts">
+      <div class="chart-card">
+        <h3><i data-lucide="activity"></i> Tỷ Lệ Nhiệm Vụ Hôm Nay</h3>
+        <canvas id="todayRescuesChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3><i data-lucide="package"></i> Tỷ Lệ Tồn Kho Hậu Cần</h3>
+        <canvas id="inventoryChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3><i data-lucide="alert-circle"></i> Tải Trọng Đội Tác Chiến</h3>
+        <canvas id="teamLoadChart"></canvas>
+      </div>
+    </section>
+
+    <section class="grid">
+      <!-- Cột Trái: Form Sinh Tài Khoản -->
+      <div class="card">
+        <header>
+          <h3><i data-lucide="user-plus"></i> Cấp Phát Định Danh</h3>
+          <p class="sub">Tạo mới và cấp quyền truy cập cho nhân sự tham gia vào hệ thống hệ hộ.</p>
+        </header>
+
+        <div id="thongBao" class="notice">
+          <i data-lucide="info"></i>
+          <span id="thongBaoText"></span>
+        </div>
+
+        <form id="userForm">
+          <div class="form-group">
+            <label for="username">Bí danh (Tên đăng nhập)</label>
+            <div class="input-wrapper">
+              <input id="username" placeholder="Nhập bí danh ví dụ: can_bo_01" required autocomplete="off" />
+              <i data-lucide="at-sign" class="icon-prefix"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Mã bảo mật (Mật khẩu)</label>
+            <div class="input-wrapper">
+              <input id="password" type="password" placeholder="••••••••" required />
+              <i data-lucide="key-round" class="icon-prefix"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="role">Phân cấp chức vụ</label>
+            <select id="role">
+              <option value="citizen">Công Dân (Citizen)</option>
+              <option value="rescue_team">Lực Lượng Tác Chiến (Rescue Team)</option>
+              <option value="coordinator">Điều Phối Viên (Coordinator)</option>
+              <option value="manager">Quản Lý Hậu Cần (Manager)</option>
+              <option value="admin" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Quản Trị Viên (Admin)
+                Tối Cao</option>
+            </select>
+          </div>
+
+          <div id="teamField" class="truong-an">
+            <div class="form-group">
+              <label for="teamId">Gắn đội cứu hộ (Bắt buộc cho lực lượng)</label>
+              <select id="teamId">
+                <option value="">-- Xin vui lòng chọn đội --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" type="submit">
+              <i data-lucide="sparkles"></i> Khởi Tạo Xong
+            </button>
+            <button class="btn btn-soft" type="reset">
+              <i data-lucide="eraser"></i> Đặt Lại
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Cột Phải: Danh sách -->
+      <div class="card" style="display: flex; flex-direction: column; overflow: hidden; max-height: 900px;">
+        <header style="margin-bottom: 0;">
+          <div class="user-list-header">
+            <div>
+              <h3><i data-lucide="users-round"></i> Hồ Sơ Nhân Sự</h3>
+              <p class="sub">Giám sát, thăng giáng chức vụ hoặc xóa sổ theo thẩm quyền.</p>
+            </div>
+            <div class="pill"><i data-lucide="fingerprint" width="16" height="16"></i> Root Access</div>
+          </div>
+        </header>
+
+        <div id="userList" style="margin-top: 24px;">
+          <!-- Render from JS -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    // Build Icons at start
+    lucide.createIcons();
+
+    requireRole(['admin']);
+
+    let cachedTeams = [];
+
+    function hienThongBao(noiDung, loai = 'success') {
+      const box = document.getElementById('thongBao');
+      const textNode = document.getElementById('thongBaoText');
+      box.className = `notice ${loai}`;
+      box.querySelector('i').setAttribute('data-lucide', loai === 'success' ? 'check-circle' : 'alert-triangle');
+      textNode.textContent = noiDung;
+      lucide.createIcons();
+
+      // Auto hide after 5s
+      setTimeout(() => { box.style.display = 'none'; }, 5000);
+    }
+
+    function chuyenRoleSangTiengViet(role) {
+      const map = {
+        citizen: { text: 'Công dân', icon: 'home' },
+        rescue_team: { text: 'Đội cứu hộ', icon: 'life-buoy' },
+        coordinator: { text: 'Điều phối viên', icon: 'radio' },
+        manager: { text: 'Quản lý hậu cần', icon: 'package' },
+        admin: { text: 'Quản trị viên', icon: 'shield-alert' }
+      };
+      return map[role] || { text: role || 'Unknown', icon: 'user' };
+    }
+
+    function capNhatThongKe(users) {
+      const tong = users.length;
+      const nguoiDan = users.filter(u => (u.role?.name || u.role) === 'citizen').length;
+      const doiCuuHo = users.filter(u => (u.role?.name || u.role) === 'rescue_team').length;
+      const vaiTroKhac = tong - nguoiDan - doiCuuHo;
+
+      // Animate numbers (simple implementation)
+      document.getElementById('tongNguoiDung').textContent = tong;
+      document.getElementById('soNguoiDan').textContent = nguoiDan;
+      document.getElementById('soDoiCuuHo').textContent = doiCuuHo;
+      document.getElementById('soVaiTroKhac').textContent = vaiTroKhac;
+    }
+
+    function toggleTeamField(roleValue) {
+      const wrapper = document.getElementById('teamField');
+      const select = document.getElementById('teamId');
+      const isRescueTeam = roleValue === 'rescue_team';
+
+      if (isRescueTeam) {
+        wrapper.classList.add('hien-thi');
+        select.required = true;
+      } else {
+        wrapper.classList.remove('hien-thi');
+        select.required = false;
+        select.value = '';
+      }
+    }
+
+    function renderTeamOptions(selectedId = '') {
+      const select = document.getElementById('teamId');
+      const options = ['<option value="">-- Xin vui lòng chọn đội --</option>']
+        .concat(cachedTeams.map(team => {
+          const selected = String(team.id) === String(selectedId) ? 'selected' : '';
+          return `<option value="${team.id}" ${selected}>${team.name}</option>`;
+        }));
+      select.innerHTML = options.join('');
+    }
+
+    async function loadTeams() {
+      try {
+        const res = await apiFetch('/lookups');
+        cachedTeams = res.data?.allTeams || res.data?.teams || [];
+        renderTeamOptions();
+      } catch (error) {
+        cachedTeams = [];
+        renderTeamOptions();
+      }
+    }
+
+    document.getElementById('role').addEventListener('change', (e) => {
+      toggleTeamField(e.target.value);
+    });
+
+    document.getElementById('userForm').addEventListener('reset', () => {
+      setTimeout(() => {
+        document.getElementById('role').value = 'citizen';
+        toggleTeamField('citizen');
+        renderTeamOptions();
+      }, 0);
+    });
+
+    document.getElementById('userForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const role = document.getElementById('role').value;
+        const payload = {
+          username: document.getElementById('username').value.trim(),
+          password: document.getElementById('password').value,
+          role
+        };
+
+        if (role === 'rescue_team') {
+          const rawTeamId = document.getElementById('teamId').value;
+          if (!rawTeamId) throw new Error('Phải chọn đội cứu hộ cho lực lượng tác chiến');
+          payload.teamId = Number(rawTeamId);
+        }
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i data-lucide="loader-2" class="lucide-spin"></i> Đang xử lý...';
+        lucide.createIcons();
+        btn.disabled = true;
+
+        await apiFetch('/users', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        e.target.reset();
+        hienThongBao('Khởi tạo định danh mới thành công!', 'success');
+        loadUsers();
+
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        lucide.createIcons();
+      } catch (error) {
+        hienThongBao(error.message, 'error');
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.innerHTML = '<i data-lucide="sparkles"></i> Khởi Tạo Xong';
+        btn.disabled = false;
+        lucide.createIcons();
+      }
+    });
+
+    async function updateUser(id, currentRole, currentTeamId) {
+      const role = prompt(
+        'Sắc lệnh điều chuyển. Gõ mã cấp bậc (citizen, rescue_team, coordinator, manager, admin):',
+        currentRole
+      );
+      if (role === null) return;
+
+      const normalizedRole = role.trim();
+      let teamId = null;
+      if (normalizedRole === 'rescue_team') {
+        const teamPrompt = cachedTeams.length
+          ? 'Nhập ID đội cứu hộ:\n' + cachedTeams.map(t => `- ${t.id}: ${t.name}`).join('\n')
+          : 'Không có đội cứu hộ khả dụng';
+        const rawTeamId = prompt(teamPrompt, currentTeamId || '');
+        if (rawTeamId === null) return;
+        if (!rawTeamId.trim()) {
+          alert('Vui lòng nhập ID đội cứu hộ.');
+          return;
+        }
+        teamId = Number(rawTeamId);
+      }
+
+      const password = prompt('Cấp mã bảo mật mới (Để trống nếu không đổi):', '');
+
+      try {
+        const payload = { role: normalizedRole };
+        if (normalizedRole === 'rescue_team') payload.teamId = teamId;
+        if (password && password.trim()) payload.password = password.trim();
+
+        await apiFetch('/users/' + id, {
+          method: 'PUT',
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        hienThongBao(`Cập nhật hồ sơ #${id} hoàn tất!`, 'success');
+        loadUsers();
+      } catch (error) {
+        alert('Có lỗi xảy ra: ' + error.message);
+      }
+    }
+
+    async function deleteUser(id) {
+      if (!confirm('⚠️ Lệnh Xóa Sổ! Bạn có chắc muốn loại bỏ tài khoản này vĩnh viễn khỏi hệ thống?')) return;
+
+      try {
+        await apiFetch('/users/' + id, { method: 'DELETE' });
+        hienThongBao(`Đã trục xuất tài khoản #${id}.`, 'success');
+        loadUsers();
+      } catch (error) {
+        alert('Lệnh bị từ chối: ' + error.message);
+      }
+    }
+
+    function getAvatarChar(name) {
+      return name ? name.charAt(0).toUpperCase() : '?';
+    }
+
+    async function loadUsers() {
+      const box = document.getElementById('userList');
+      try {
+        const res = await apiFetch('/users');
+        const users = res.data || [];
+        capNhatThongKe(users);
+
+        if (!users.length) {
+          box.innerHTML = `
+            <div class="empty">
+              <i data-lucide="ghost"></i>
+              <span>Máy chủ vắng tanh, chưa có hồ sơ nào.</span>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        box.innerHTML = users.map((u) => {
+          const roleName = u.role?.name || u.role || '';
+          const safeRole = String(roleName).replace(/'/g, "\\'");
+          const teamId = u.team?.id || '';
+          const teamLabel = u.team?.name ? `<span class="meta"><i data-lucide="shield"></i> Đội: ${u.team.name}</span>` : '';
+
+          let extraClass = '';
+          if (roleName === 'admin') extraClass = 'role-admin';
+          else if (roleName === 'rescue_team') extraClass = 'role-rescue';
+
+          const roleInfo = chuyenRoleSangTiengViet(roleName);
+          const avatar = getAvatarChar(u.username);
+          const joinDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString('vi-VN') : 'Không rõ';
+
+          return `
+            <div class="user-card">
+              <div class="user-card-top">
+                <div class="user-info">
+                  <div class="user-avatar">${avatar}</div>
+                  <div class="user-details">
+                    <h4>${u.username} <span style="font-size: 0.8rem; color: #64748b; font-weight: 500;">#${u.id}</span></h4>
+                    <div style="display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap;">
+                      <span class="role-chip ${extraClass}">
+                        <i data-lucide="${roleInfo.icon}" width="14" height="14"></i> ${roleInfo.text}
+                      </span>
+                      ${teamLabel}
+                      <span class="meta"><i data-lucide="clock"></i> ${joinDate}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="user-card-actions">
+                <button class="btn-action btn-edit" onclick="updateUser(${u.id}, '${safeRole}', '${teamId}')">
+                  <i data-lucide="pencil-line" width="16" height="16"></i> Sửa Quyền
+                </button>
+                <button class="btn-action btn-delete" onclick="deleteUser(${u.id})">
+                  <i data-lucide="trash-2" width="16" height="16"></i> Xóa
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Re-init icons for new innerHTML
+        lucide.createIcons();
+      } catch (error) {
+        box.innerHTML = `
+          <div class="empty" style="color: #fca5a5; border-color: rgba(239, 68, 68, 0.3);">
+            <i data-lucide="wifi-off"></i>
+            <span>Mất kết nối CSDL: ${error.message}</span>
+          </div>
+        `;
+        lucide.createIcons();
+      }
+    }
+
+    // Auto-init
+    toggleTeamField(document.getElementById('role').value);
+    loadTeams();
+    loadUsers();
+    loadDashboardCharts();
+
+    async function loadDashboardCharts() {
+      try {
+        const [assRes, itemRes, lookupRes] = await Promise.all([
+          apiFetch('/assignments'),
+          apiFetch('/relief-items'),
+          apiFetch('/lookups')
+        ]);
+        
+        const assignments = assRes.data || [];
+        const items = itemRes.data || [];
+        const teams = lookupRes.data?.allTeams || lookupRes.data?.teams || [];
+
+        // 1. Ca cứu hộ hôm nay
+        const todayStr = new Date().toDateString();
+        const completedToday = assignments.filter(a => a.status === 'completed' && new Date(a.assignedAt).toDateString() === todayStr).length;
+        const totalToday = assignments.filter(a => new Date(a.assignedAt).toDateString() === todayStr).length;
+
+        new Chart(document.getElementById('todayRescuesChart'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Đã Xong', 'Đang Chờ/Xử Lý'],
+            datasets: [{
+              data: [completedToday, (totalToday - completedToday) > 0 ? (totalToday - completedToday) : 0],
+              backgroundColor: ['#10b981', '#3b82f6'],
+              borderWidth: 0,
+              hoverOffset: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans' } } }
+            }
+          }
+        });
+
+        // 2. Tỷ lệ tồn kho
+        const totalInitial = items.reduce((sum, item) => sum + (item.initialQuantity || item.quantity || 0), 0);
+        const totalCurrent = items.reduce((sum, item) => sum + item.quantity, 0);
+        const consumed = totalInitial - totalCurrent;
+        
+        new Chart(document.getElementById('inventoryChart'), {
+          type: 'pie',
+          data: {
+            labels: ['Tồn Kho', 'Đã Phát'],
+            datasets: [{
+              data: [totalCurrent, consumed > 0 ? consumed : 0],
+              backgroundColor: ['#8b5cf6', '#ef4444'],
+              borderWidth: 0,
+              hoverOffset: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans' } } }
+            }
+          }
+        });
+
+        // 3. Tải trọng tổ tác chiến
+        const teamLoad = {};
+        teams.forEach(t => teamLoad[t.name] = 0);
+        assignments.forEach(a => {
+           if (a.status !== 'completed' && a.team && a.team.name) {
+              teamLoad[a.team.name] = (teamLoad[a.team.name] || 0) + 1;
+           }
+        });
+        
+        new Chart(document.getElementById('teamLoadChart'), {
+          type: 'bar',
+          data: {
+            labels: Object.keys(teamLoad).length > 0 ? Object.keys(teamLoad) : ['Chưa có lực lượng'],
+            datasets: [{
+              label: 'Số ca đang gánh',
+              data: Object.values(teamLoad).length > 0 ? Object.values(teamLoad) : [0],
+              backgroundColor: '#f59e0b',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1', stepSize: 1, font: { family: 'Plus Jakarta Sans' } } },
+              x: { grid: { display: false }, ticks: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans' } } }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Lỗi khi load Dashboard Charts:", error);
+      }
+    }
+  </script>
+</body>
+
+</html>
