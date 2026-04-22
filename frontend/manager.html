@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trạm Quản Lý Hậu Cần & Khí Tài</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --primary-glow: rgba(16, 185, 129, 0.4);
+      --secondary: #3b82f6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --warning-glow: rgba(245, 158, 11, 0.4);
+      --bg-base: #030712;
+      --surface-1: rgba(17, 24, 39, 0.7);
+      --surface-2: rgba(31, 41, 55, 0.6);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      background-color: var(--bg-base) !important;
+      color: var(--text-main) !important;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
+      filter: blur(60px);
+      animation: ambientFlow 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientFlow {
+      0% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(1.1) translate(15px, -15px);
+      }
+    }
+
+    .shell {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 24px 60px;
+      animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      position: relative;
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.8), rgba(15, 23, 42, 0.8));
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 40px 45px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(16, 185, 129, 0.1);
+      margin-bottom: 40px;
+      backdrop-filter: blur(16px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      overflow: hidden;
+    }
+
+    .hero-icon-bg {
+      position: absolute;
+      top: -30px;
+      right: 5%;
+      color: rgba(16, 185, 129, 0.08);
+      transform: rotate(10deg);
+      pointer-events: none;
+    }
+
+    .hero-icon-bg svg {
+      width: 300px;
+      height: 300px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .badge-premium {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .logout-btn {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 14px 28px;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .the-chuc-nang {
+      background: var(--surface-1);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--border-color);
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .the-chuc-nang header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+      padding-bottom: 20px;
+    }
+
+    .the-chuc-nang h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Form Nhập liệu */
+    .form-nhap-lieu {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 25px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper i.icon-prefix {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    .form-nhap-lieu input,
+    .form-nhap-lieu select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      border-radius: 14px;
+      padding: 16px 16px 16px 48px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: 0.3s;
+    }
+
+    .form-nhap-lieu select {
+      appearance: auto;
+    }
+
+    .form-nhap-lieu input:focus,
+    .form-nhap-lieu select:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+      border-color: var(--primary);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .form-nhap-lieu.form-vang input:focus {
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+      border-color: var(--warning);
+    }
+
+    .form-nhap-lieu select option {
+      background: #0f172a;
+      padding: 10px;
+    }
+
+    .nut-them {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      padding: 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .nut-them:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.5);
+    }
+
+    .nut-them-vang {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+    }
+
+    .nut-them-vang:hover {
+      box-shadow: 0 15px 30px rgba(245, 158, 11, 0.5);
+    }
+
+    /* Danh sách Items */
+    .danh-sach {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 550px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .danh-sach::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .danh-sach::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .item-the {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .item-the:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateX(8px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .thong-tin-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .thong-tin-item strong {
+      font-size: 1.15rem;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .thong-tin-item strong i {
+      color: #94a3b8;
+    }
+
+    .nhan-trang-thai {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .nhan-xanh {
+      background: rgba(16, 185, 129, 0.1);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .nhan-do {
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .nhan-vang {
+      background: rgba(245, 158, 11, 0.1);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .hanh-dong {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nut-hanh-dong {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nut-sua {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+    }
+
+    .nut-sua:hover {
+      background: rgba(59, 130, 246, 0.3);
+      color: #fff;
+    }
+
+    .nut-xoa {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+    }
+
+    .nut-xoa:hover {
+      background: rgba(239, 68, 68, 0.3);
+      color: #fff;
+    }
+
+    .btn-icon-only {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+      display: grid;
+      place-items: center;
+    }
+
+    .btn-icon-only:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .empty {
+      text-align: center;
+      color: #64748b;
+      padding: 40px 20px;
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    @media (max-width: 992px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-mesh"></div>
+
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-icon-bg"><i data-lucide="package"></i></div>
+      <div class="hero-content">
+        <div class="badge-premium"><i data-lucide="shield" width="16" height="16"></i> Quản Lý Tài Sản</div>
+        <h1>Trung Tâm Hậu Cần & Khí Tài</h1>
+        <p>Hệ thống giám sát, phân bổ và cập nhật liên tục mọi phương tiện cứu hộ cứu nạn cùng hàng hóa, vật tư thiết
+          yếu theo thời gian thực.</p>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <i data-lucide="log-out"></i> Rời Khỏi Kho
+      </button>
+    </section>
+
+    <section class="grid">
+      <!-- Cột Trái: Trực Thăng & Ca nô -->
+      <div class="the-chuc-nang">
+        <header>
+          <h3 style="color: #38bdf8;"><i data-lucide="car"></i> Cục Quản Trị Khí Tài</h3>
+          <button class="btn-icon-only" onclick="loadVehicles()" title="Tải lại danh sách xe">
+            <i data-lucide="refresh-cw" width="20" height="20"></i>
+          </button>
+        </header>
+
+        <form id="vehicleForm" class="form-nhap-lieu">
+          <div class="form-group">
+            <label><i data-lucide="pen-tool" width="16" height="16"></i> Tên khí tài / Tên mã hóa</label>
+            <div class="input-wrapper">
+              <input id="vehicleName" placeholder="VD: Ca nô CN-01 Bạch Tuộc..." required />
+              <i data-lucide="type" class="icon-prefix"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i data-lucide="activity" width="16" height="16"></i> Tình trạng chiến dịch</label>
+            <div class="input-wrapper">
+              <select id="vehicleStatus">
+                <option value="available">🟢 Sẵn sàng trực chiến</option>
+                <option value="in_use">🔴 Đang giao tranh (Nhiệm vụ)</option>
+              </select>
+              <i data-lucide="heart-pulse" class="icon-prefix"></i>
+            </div>
+          </div>
+          <button type="submit" class="nut-them">
+            <i data-lucide="plus-circle"></i> Biên Chế Khí Tài Mới
+          </button>
+        </form>
+
+        <div id="vehicleList" class="danh-sach">
+          <!-- Render from JS -->
+        </div>
+      </div>
+
+      <!-- Cột Phải: Vật Tư Nhu Yếu Phẩm -->
+      <div class="the-chuc-nang">
+        <header>
+          <h3 style="color: #f59e0b;"><i data-lucide="packages"></i> Kho Bãi Nhu Yếu Phẩm</h3>
+          <button class="btn-icon-only" onclick="loadItems()" title="Tải lại biểu đồ kho">
+            <i data-lucide="refresh-cw" width="20" height="20"></i>
+          </button>
+        </header>
+
+        <form id="itemForm" class="form-nhap-lieu form-vang">
+          <div class="form-group">
+            <label><i data-lucide="tag" width="16" height="16"></i> Tên hạng mục vật tư</label>
+            <div class="input-wrapper">
+              <input id="itemName" placeholder="VD: Áo phao cứu sinh, Lương khô..." required />
+              <i data-lucide="box" class="icon-prefix"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i data-lucide="layers" width="16" height="16"></i> Số lượng thực tế nhập kho</label>
+            <div class="input-wrapper">
+              <input id="itemQuantity" type="number" min="0" placeholder="0" required />
+              <i data-lucide="calculator" class="icon-prefix"></i>
+            </div>
+          </div>
+          <button type="submit" class="nut-them nut-them-vang">
+            <i data-lucide="archive-restore"></i> Nhập Kho Lô Mới
+          </button>
+        </form>
+
+        <div id="itemList" class="danh-sach">
+          <!-- Render from JS -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    lucide.createIcons();
+    requireRole(['manager']);
+
+    document.getElementById('vehicleForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await apiFetch('/vehicles', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: document.getElementById('vehicleName').value,
+            status: document.getElementById('vehicleStatus').value
+          }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        e.target.reset();
+        document.getElementById('vehicleStatus').value = 'available';
+        loadVehicles();
+      } catch (error) {
+        alert('❌ Lỗi thêm phương tiện: ' + error.message);
+      }
+    });
+
+    document.getElementById('itemForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await apiFetch('/relief-items', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: document.getElementById('itemName').value,
+            quantity: Number(document.getElementById('itemQuantity').value)
+          }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        e.target.reset();
+        loadItems();
+      } catch (error) {
+        alert('❌ Lỗi nhập kho: ' + error.message);
+      }
+    });
+
+    window.editVehicle = async function (id, currentName, currentStatus) {
+      const name = prompt('📝 Cập nhật định danh phương tiện mới:', currentName);
+      if (name === null) return;
+      const statusText = prompt('Trạng thái mới (Gõ chính xác tiếng anh: available, in_use hoặc maintenance):', currentStatus);
+      if (statusText === null) return;
+
+      try {
+        await apiFetch('/vehicles/' + id, {
+          method: 'PUT',
+          body: JSON.stringify({ name, status: (statusText || '').trim().toLowerCase() }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        loadVehicles();
+      } catch (error) {
+        alert('❌ Lỗi sửa: ' + error.message);
+      }
+    }
+
+    window.deleteVehicle = async function (id) {
+      if (!confirm('⚠️ Cảnh báo An Toàn! Bạn có chắc chắn muốn hủy đăng ký phương tiện này khỏi cơ sở dữ liệu?')) return;
+      try {
+        await apiFetch('/vehicles/' + id, { method: 'DELETE' });
+        loadVehicles();
+      } catch (error) {
+        alert('❌ Lỗi xóa: ' + error.message);
+      }
+    }
+
+    window.editItem = async function (id, currentName, currentQuantity) {
+      const name = prompt('📝 Đổi Tên vật tư mới:', currentName);
+      if (name === null) return;
+      const quantity = prompt('📦 Kiểm kê Số lượng cập nhật:', currentQuantity);
+      if (quantity === null) return;
+
+      try {
+        await apiFetch('/relief-items/' + id, {
+          method: 'PUT',
+          body: JSON.stringify({ name, quantity: Number(quantity) }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        loadItems();
+      } catch (error) {
+        alert('❌ Lỗi sửa kho: ' + error.message);
+      }
+    }
+
+    window.deleteItem = async function (id) {
+      if (!confirm('⚠️ Lệnh Thanh Lý! Bạn quyết định loại bỏ vĩnh viễn mặt hàng này khỏi biên bản kho chứ?')) return;
+      try {
+        await apiFetch('/relief-items/' + id, { method: 'DELETE' });
+        loadItems();
+      } catch (error) {
+        alert('❌ Lỗi thanh lý: ' + error.message);
+      }
+    }
+
+    async function loadVehicles() {
+      const box = document.getElementById('vehicleList');
+      try {
+        const res = await apiFetch('/vehicles');
+        const ds = res.data || [];
+
+        if (!ds.length) {
+          box.innerHTML = `<div class="empty"><i data-lucide="shield-off" width="40" height="40"></i><span>Cơ sở trống, không có khí tài.</span></div>`;
+          lucide.createIcons();
+          return;
+        }
+
+        box.innerHTML = ds.map((v) => {
+          const badge = v.status === 'available'
+            ? '<span class="nhan-trang-thai nhan-xanh"><i data-lucide="check-circle-2" width="14" height="14"></i> Sẵn sàng</span>'
+            : '<span class="nhan-trang-thai nhan-do"><i data-lucide="triangle-alert" width="14" height="14"></i> Đang hoạt động</span>';
+
+          const safeName = (v.name || '').replace(/'/g, "\\'");
+          const safeStatus = (v.status || '').replace(/'/g, "\\'");
+
+          return `
+          <div class="item-the">
+            <div class="thong-tin-item">
+              <strong><i data-lucide="car-front" width="18" height="18"></i> ${v.name}</strong>
+              <div style="display:flex; align-items:center; gap:8px;">
+                 <span style="font-size: 0.85rem; color: #94a3b8;">Mã #${v.id}</span>
+                 ${badge}
+              </div>
+            </div>
+            <div class="hanh-dong">
+              <button class="nut-hanh-dong nut-sua" onclick="editVehicle(${v.id}, '${safeName}', '${safeStatus}')"><i data-lucide="pencil" width="14" height="14"></i></button>
+              <button class="nut-hanh-dong nut-xoa" onclick="deleteVehicle(${v.id})"><i data-lucide="trash-2" width="14" height="14"></i></button>
+            </div>
+          </div>
+        `}).join('');
+        lucide.createIcons();
+      } catch (error) {
+        box.innerHTML = `<div class="empty" style="color:#fca5a5"><i data-lucide="alert-octagon" width="32" height="32"></i><span>Lỗi đọc dữ liệu: ${error.message}</span></div>`;
+        lucide.createIcons();
+      }
+    }
+
+    async function loadItems() {
+      const box = document.getElementById('itemList');
+      try {
+        const res = await apiFetch('/relief-items');
+        const ds = res.data || [];
+
+        if (!ds.length) {
+          box.innerHTML = `<div class="empty"><i data-lucide="package-open" width="40" height="40"></i><span>Kho trống trơn! Vui lòng nhập hàng.</span></div>`;
+          lucide.createIcons();
+          return;
+        }
+
+        box.innerHTML = ds.map((i) => {
+          const safeName = (i.name || '').replace(/'/g, "\\'");
+          return `
+          <div class="item-the">
+            <div class="thong-tin-item">
+              <strong><i data-lucide="box" width="18" height="18"></i> ${i.name}</strong>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="nhan-trang-thai nhan-vang"><i data-lucide="layers" width="14" height="14"></i> Tồn kho: ${i.quantity}</span>
+              </div>
+            </div>
+            <div class="hanh-dong">
+              <button class="nut-hanh-dong nut-sua" onclick="editItem(${i.id}, '${safeName}', ${i.quantity || 0})"><i data-lucide="pencil" width="14" height="14"></i></button>
+              <button class="nut-hanh-dong nut-xoa" onclick="deleteItem(${i.id})"><i data-lucide="trash-2" width="14" height="14"></i></button>
+            </div>
+          </div>
+        `}).join('');
+        lucide.createIcons();
+      } catch (error) {
+        box.innerHTML = `<div class="empty" style="color:#fca5a5"><i data-lucide="alert-octagon" width="32" height="32"></i><span>Lỗi đọc kho: ${error.message}</span></div>`;
+        lucide.createIcons();
+      }
+    }
+
+    loadVehicles();
+    loadItems();
+  </script>
+</body>
+
+</html>
