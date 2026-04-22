@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bảng Mệnh Lệnh Tác Chiến | Đội Cứu Hộ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --primary: #f59e0b;
+      --primary-hover: #d97706;
+      --primary-glow: rgba(245, 158, 11, 0.4);
+      --secondary: #ef4444;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.4);
+      --warning: #f59e0b;
+      --bg-base: #030712;
+      --surface-1: rgba(17, 24, 39, 0.8);
+      --surface-2: rgba(31, 41, 55, 0.6);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body, html {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      background-color: var(--bg-base) !important;
+      color: var(--text-main) !important;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-mesh {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+      background-image: 
+        radial-gradient(circle at 80% 10%, rgba(2ef4444, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 10% 90%, rgba(245, 158, 11, 0.15) 0%, transparent 40%);
+      filter: blur(60px);
+      animation: ambientFlow 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientFlow {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.1) translate(-15px, 25px); }
+    }
+
+    .shell {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 24px 60px;
+      animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    .hero {
+      position: relative;
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(127, 29, 29, 0.8), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 40px 45px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 40px rgba(239, 68, 68, 0.15);
+      margin-bottom: 40px;
+      backdrop-filter: blur(16px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      overflow: hidden;
+    }
+
+    .hero-icon-bg {
+      position: absolute; top: -40px; right: 8%;
+      color: rgba(239, 68, 68, 0.08); transform: rotate(15deg); pointer-events: none;
+    }
+    .hero-icon-bg svg { width: 350px; height: 350px; }
+
+    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+
+    .badge-premium {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px;
+      background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px;
+      margin-bottom: 20px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+    }
+
+    .hero h1 { margin: 0 0 12px; font-size: 2.8rem; font-weight: 800; text-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+    .hero p { margin: 0; color: #cbd5e1; font-size: 1.15rem; line-height: 1.7; font-weight: 500; }
+
+    .logout-btn {
+      position: relative; z-index: 1; display: flex; align-items: center; gap: 10px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main);
+      padding: 14px 28px; border-radius: 16px; font-weight: 600; font-size: 1rem; cursor: pointer;
+      backdrop-filter: blur(10px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .logout-btn:hover { background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.5); color: #7dd3fc; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3); }
+
+    .bang-dieu-khien {
+      background: var(--surface-1); backdrop-filter: blur(24px); border: 1px solid var(--border-color); border-radius: 28px; padding: 35px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6);
+    }
+
+    .bang-dieu-khien header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 20px; }
+    .bang-dieu-khien h3 { margin: 0; font-size: 1.8rem; color: var(--text-main); display: flex; align-items: center; gap: 12px; font-weight: 800; }
+
+    .btn-icon-only { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 14px; cursor: pointer; transition: 0.3s; display: grid; place-items: center; }
+    .btn-icon-only:hover { background: rgba(245, 158, 11, 0.15); color: var(--primary); border-color: rgba(245, 158, 11, 0.3); }
+
+    .luoi-nhiem-vu { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 30px; }
+
+    /* Thẻ nhiệm vụ cực cháy 🔥 */
+    .the-nhiem-vu {
+      background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color); border-radius: 24px; padding: 28px;
+      position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 20px;
+      box-shadow: 0 15px 35px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Hiệu ứng viền sáng mờ mờ ảo ảo */
+    .the-nhiem-vu::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 24px; border: 2px solid transparent;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.4), transparent 60%) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out; mask-composite: exclude; opacity: 0.5; transition: 0.4s; pointer-events: none;
+    }
+
+    .the-nhiem-vu:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 25px 50px -10px rgba(0,0,0,0.8), 0 0 30px var(--primary-glow); }
+    .the-nhiem-vu:hover::after { opacity: 1; }
+
+    /* Thẻ đã xong thì đổi màu viền sang xanh mộc */
+    .the-nhiem-vu.da-xong { background: rgba(6, 78, 59, 0.3); }
+    .the-nhiem-vu.da-xong::after { background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), transparent 60%) border-box; }
+    .the-nhiem-vu.da-xong:hover { box-shadow: 0 25px 50px -10px rgba(0,0,0,0.5), 0 0 30px var(--success-glow); }
+
+    .dong-tieu-de { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px dashed rgba(255,255,255,0.1); z-index: 1; }
+    .ma-nhiem-vu { font-size: 1.5rem; font-weight: 800; color: #f8fafc; display: flex; align-items: center; gap: 8px;}
+
+    .nhan-trang-thai { font-size: 0.85rem; padding: 6px 14px; border-radius: 8px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+
+    .trang-thai-cho { background: rgba(249, 115, 22, 0.15); color: #fdba74; border: 1px solid rgba(249, 115, 22, 0.3); box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); }
+    .trang-thai-xong { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); box-shadow: 0 0 15px rgba(16, 185, 129, 0.1); }
+
+    .chi-tiet-nv { font-size: 1rem; color: #94a3b8; line-height: 1.6; display: grid; gap: 14px; z-index: 1; }
+
+    .chi-tiet-nv .muc-info { display: flex; align-items: flex-start; gap: 12px; background: rgba(0,0,0,0.3); padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.03); }
+    .chi-tiet-nv .muc-info i { color: #cbd5e1; flex-shrink: 0; margin-top: 2px;}
+
+    .chi-tiet-nv strong { color: #e2e8f0; display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;}
+
+    .khu-vuc-nut { margin-top: auto; padding-top: 10px; z-index: 1; }
+
+    .nut-bao-cao {
+      width: 100%; padding: 18px; border-radius: 16px; border: none;
+      background: linear-gradient(135deg, var(--warning), #ea580c); color: #fff; font-weight: 800; font-size: 1.1rem;
+      cursor: pointer; transition: 0.3s; box-shadow: 0 10px 30px var(--primary-glow); display: flex; justify-content: center; align-items: center; gap: 10px;
+    }
+    .nut-bao-cao:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(245, 158, 11, 0.6); background: linear-gradient(135deg, #fbbf24, #d97706); }
+
+    .nut-huy {
+      width: 100%; padding: 18px; border-radius: 16px; border: none;
+      background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; font-weight: 800; font-size: 1rem;
+      cursor: pointer; transition: 0.3s; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3); display: flex; justify-content: center; align-items: center; gap: 8px;
+    }
+    .nut-huy:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(239, 68, 68, 0.6); }
+
+    .nut-khoa {
+      width: 100%; padding: 18px; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.02); color: #64748b; font-weight: 700; cursor: not-allowed;
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+    }
+
+    .empty { text-align: center; color: #64748b; padding: 60px 20px; border: 1px dashed rgba(255,255,255,0.15); border-radius: 20px; background: rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; gap: 16px; grid-column: 1 / -1;}
+    
+    /* Modal Hậu cần */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center; z-index: 100;
+      animation: fadeIn 0.3s ease;
+    }
+    .modal-content {
+      background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 24px; padding: 30px; width: 90%; max-width: 500px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 40px rgba(245, 158, 11, 0.05);
+      transform: translateY(20px); animation: slideUp 0.3s ease forwards;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { to { transform: translateY(0); } }
+    
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px;}
+    .modal-header h3 { margin: 0; color: #f8fafc; display: flex; align-items: center; gap: 8px;}
+    .close-btn { background: none; border: none; color: #94a3b8; cursor: pointer; transition: 0.3s; padding: 5px; display: grid; place-items: center; border-radius: 8px;}
+    .close-btn:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+    .inventory-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; padding-right: 5px; }
+    .inventory-list::-webkit-scrollbar { width: 5px; }
+    .inventory-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 5px;}
+
+    .inv-item { background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.02);}
+    .inv-info strong { color: #e2e8f0; display: block; font-size: 1.05rem; margin-bottom: 4px;}
+    .inv-info span { color: #94a3b8; font-size: 0.85rem;}
+    
+    .qty-control { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 10px;}
+    .qty-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display:grid; place-items:center;}
+    .qty-btn:hover { background: var(--warning); }
+    .qty-input { width: 35px; background: none; border: none; color: white; text-align: center; font-weight: bold; font-size: 1rem; appearance: none; -moz-appearance: textfield;}
+    
+    .modal-actions { display: flex; gap: 12px;}
+    .modal-actions button { flex: 1; padding: 16px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.3s; border: none; display: flex; justify-content: center; align-items: center; gap: 8px;}
+    .btn-cancel { background: rgba(255,255,255,0.05); color: #cbd5e1; }
+    .btn-cancel:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .btn-submit { background: linear-gradient(135deg, var(--success), #059669); color: white; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3); }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5); }
+    .btn-submit:disabled { background: #64748b; cursor: not-allowed; transform: none; box-shadow: none;}
+  </style>
+</head>
+<body>
+  <div class="bg-mesh"></div>
+
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-icon-bg"><i data-lucide="siren"></i></div>
+      <div class="hero-content">
+        <div class="badge-premium"><i data-lucide="axe" width="16" height="16"></i> Biệt Đội Tác Chiến</div>
+        <h1>Mệnh Lệnh Điều Quân</h1>
+        <p>Kiểm tra lệnh xuất kích, nắm rõ hiện trạng và xác nhận an toàn sau khi hoàn tất giải cứu thành công người dân khỏi vùng nguy hiểm.</p>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <i data-lucide="log-out"></i> Trở về Căn Cứ (Logout)
+      </button>
+    </section>
+
+    <section class="bang-dieu-khien">
+      <header>
+        <h3><i data-lucide="swords" style="color: var(--primary);"></i> Danh Sách Nhiệm Vụ</h3>
+        <button class="btn-icon-only" onclick="loadTasks()" title="Liên lạc Trung tâm">
+          <i data-lucide="refresh-cw" width="24" height="24"></i>
+        </button>
+      </header>
+      
+      <div id="taskList" class="luoi-nhiem-vu">
+         <!-- Render from JS -->
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal Báo Cáo Hậu Cần -->
+  <div id="inventoryModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i data-lucide="package-open" style="color: var(--warning);"></i> <span>Báo Cáo Tiếp Tế (Xuất Kho)</span></h3>
+        <button class="close-btn" onclick="closeModal()"><i data-lucide="x" width="20" height="20"></i></button>
+      </div>
+      
+      <p style="color: #94a3b8; font-size: 0.95rem; margin: 0 0 16px; line-height: 1.5;">Vui lòng ghi nhận số lượng vật tư, nhu yếu phẩm đã phân phát cho nạn nhân tại hiện trường. Số lượng này sẽ tự động trừ vào tổng kho.</p>
+
+      <div id="inventoryListContainer" class="inventory-list">
+        <!-- JS Render -->
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Hủy Bỏ</button>
+        <button id="btnSubmitTask" class="btn-submit" onclick="submitTaskCompletion()"><i data-lucide="check-circle-2"></i> Chốt Số & Hoàn Tất</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Báo Cáo Sự Cố Ngoại Cảnh -->
+  <div id="exceptionModal" class="modal-overlay">
+    <div class="modal-content" style="border-color: rgba(239, 68, 68, 0.5); box-shadow: inset 0 0 40px rgba(239, 68, 68, 0.1);">
+      <div class="modal-header">
+        <h3><i data-lucide="alert-triangle" style="color: #ef4444;"></i> <span style="color: #fca5a5;">Phát Tín Hiệu Khẩn Nguy</span></h3>
+        <button class="close-btn" onclick="closeExceptionModal()"><i data-lucide="x" width="20" height="20"></i></button>
+      </div>
+      
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label style="color: #cbd5e1; font-weight: bold; display: block; margin-bottom: 10px;">Phân loại sự cố:</label>
+        <select id="exceptionStatus" style="width: 100%; border-radius: 12px; padding: 14px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.2); outline: none;">
+          <option value="blocked">🚧 Tắc đường / Đường lở / Ngập sâu</option>
+          <option value="need_backup">🆘 Cần chi viện (Y tế / Trang thiết bị)</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label style="color: #cbd5e1; font-weight: bold; display: block; margin-bottom: 10px;">Mô tả tình hình thực địa:</label>
+        <textarea id="exceptionNote" placeholder="Mở hướng di chuyển khác hoặc cần tàu sức chứa bao nhiêu mét khối..." style="width: 100%; border-radius: 12px; padding: 14px; min-height: 80px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.2); outline: none;"></textarea>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 25px;">
+        <label style="color: #cbd5e1; font-weight: bold; display: flex; align-items:center; gap:8px; margin-bottom: 10px;"><i data-lucide="camera" width="16" height="16"></i> Chụp ảnh hiện trường:</label>
+        <input type="file" id="exceptionFile" accept="image/*" onchange="previewExceptionImage(event)" style="display: none;">
+        <label for="exceptionFile" style="display:flex; justify-content:center; align-items:center; flex-direction:column; background: rgba(255,255,255,0.05); border: 2px dashed rgba(255,255,255,0.2); padding: 20px; border-radius: 16px; cursor: pointer; color: #94a3b8; transition: 0.3s;" onmouseover="this.style.borderColor='#ef4444'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+          <i id="upIcon" data-lucide="upload-cloud" width="32" height="32" style="margin-bottom:10px;"></i> <span>Bấm để đính kèm ảnh</span>
+        </label>
+        <img id="exceptionImgPreview" style="width:100%; border-radius: 12px; margin-top: 15px; display: none; border: 1px solid rgba(255,255,255,0.1); max-height: 250px; object-fit: cover;">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeExceptionModal()">Hủy Bỏ</button>
+        <button id="btnSubmitException" style="flex:2; display:flex; justify-content:center; align-items:center; gap:8px; background: linear-gradient(135deg, #ef4444, #b91c1c); color:white; border:none; padding:16px; border-radius:14px; font-weight:bold; cursor:pointer;" onclick="submitException()"><i data-lucide="radio-tower"></i> Truyền Tín Hiệu Về Trạm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    lucide.createIcons();
+    requireRole(['rescue_team']);
+
+    async function loadTasks() {
+      const box = document.getElementById('taskList');
+      try {
+        const res = await apiFetch('/team/tasks');
+        const ds = res.data || [];
+
+        if (!ds.length) {
+          box.innerHTML = `<div class="empty"><i data-lucide="coffee" width="48" height="48"></i><span>Tạm thời không có lệnh xuất kích. Hãy nghỉ ngơi, chuẩn bị khí tài.</span></div>`;
+          lucide.createIcons();
+          return;
+        }
+        
+        box.innerHTML = ds.map((t) => {
+          const isDone = t.status === 'completed' || t.status === 'revoked';
+          const cardClass = isDone ? 'the-nhiem-vu da-xong' : 'the-nhiem-vu';
+          
+          const badgeHTML = isDone 
+            ? `<div class="nhan-trang-thai trang-thai-xong"><i data-lucide="check-circle-2" width="16" height="16"></i> Đã hoàn tất</div>` 
+            : `<div class="nhan-trang-thai trang-thai-cho"><i data-lucide="flame" width="16" height="16"></i> Khẩn cấp</div>`;
+          
+          const actionBtn = !isDone 
+            ? `<div style="display:flex; gap:10px; width: 100%;">
+                 <button class="nut-bao-cao" style="flex: 2; padding: 16px;" onclick="openInventoryModal(${t.id})"><i data-lucide="shield-check"></i> Hoàn Thành</button>
+                 <button class="nut-huy" style="flex: 1; padding: 16px;" onclick="openExceptionModal(${t.id})"><i data-lucide="alert-triangle"></i> Gặp Sự Cố</button>
+               </div>`
+            : `<div class="nut-khoa"><i data-lucide="lock"></i> Hồ sơ đã được niêm phong</div>`;
+
+          const timeStr = t.assignedAt ? new Date(t.assignedAt).toLocaleString('vi-VN') : '--:--';
+
+          return `
+            <div class="${cardClass}">
+              <div class="dong-tieu-de">
+                <div class="ma-nhiem-vu"><i data-lucide="hash" width="24" height="24" style="color: var(--primary);"></i> Lệnh #${t.id}</div>
+                ${badgeHTML}
+              </div>
+              
+              <div class="chi-tiet-nv">
+                <div class="muc-info">
+                  <i data-lucide="map-pin"></i>
+                  <div>
+                    <strong>Chỉ thị hiện trường</strong>
+                    <span style="color: #f1f5f9; font-weight: 500;">${t.request?.description || 'N/A'}</span>
+                  </div>
+                </div>
+
+                <div class="muc-info">
+                  <i data-lucide="users"></i>
+                  <div>
+                    <strong>Lực lượng triển khai</strong>
+                    <span style="color: #cbd5e1;">${t.team?.name || 'Chưa điều động'}</span>
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                  <div class="muc-info" style="padding: 12px; gap:8px;">
+                    <i data-lucide="car-front" style="margin-top:4px;"></i>
+                    <div>
+                      <strong>Khí tài</strong>
+                      <span style="color: #cbd5e1;">${t.vehicle?.name || 'N/A'}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="muc-info" style="padding: 12px; gap:8px;">
+                    <i data-lucide="clock" style="margin-top:4px;"></i>
+                    <div>
+                      <strong>Giờ G</strong>
+                      <span style="color: #cbd5e1;">${timeStr.split(' ')[1] || timeStr}</span> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="khu-vuc-nut">
+                ${actionBtn}
+              </div>
+            </div>
+          `;
+        }).join('');
+        lucide.createIcons();
+      } catch (error) {
+        box.innerHTML = `
+          <div class="empty" style="color: #fca5a5; border-color: rgba(239, 68, 68, 0.3);">
+            <i data-lucide="wifi-off" width="48" height="48"></i>
+            <span>Mất kết nối tổng đài! ${error.message}</span>
+          </div>`;
+        lucide.createIcons();
+      }
+    }
+
+    let currentTaskId = null;
+    let inventoryData = [];
+
+    window.openInventoryModal = async function(taskId) {
+      currentTaskId = taskId;
+      const modal = document.getElementById('inventoryModal');
+      const listContainer = document.getElementById('inventoryListContainer');
+      
+      listContainer.innerHTML = '<div style="text-align:center; padding: 30px;"><i data-lucide="loader-2" class="lucide-spin" style="margin-bottom:10px; display:inline-block;"></i><br>Đang đồng bộ dữ liệu tổng kho...</div>';
+      lucide.createIcons();
+      modal.style.display = 'flex';
+
+      try {
+        const res = await apiFetch('/relief-items');
+        inventoryData = res.data || [];
+        
+        if (inventoryData.length === 0) {
+          listContainer.innerHTML = '<div class="empty" style="padding: 30px 10px;">Kho hậu cần hệ thống trống. Trực tiếp xác nhận hoàn tất nhiệm vụ!</div>';
+        } else {
+          listContainer.innerHTML = inventoryData.map(item => `
+            <div class="inv-item">
+              <div class="inv-info">
+                <strong>${item.name}</strong>
+                <span><i data-lucide="layers" width="12" height="12"></i> Tồn kho: <span style="color:#6ee7b7">${item.quantity}</span></span>
+              </div>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">-</button>
+                <input class="qty-input" type="number" id="qty_${item.id}" value="0" min="0" max="${item.quantity}" readonly>
+                <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
+              </div>
+            </div>
+          `).join('');
+          lucide.createIcons();
+        }
+      } catch (err) {
+        listContainer.innerHTML = `<div style="color:#fca5a5; padding: 20px; text-align:center;">Lỗi kết nối Server: ${err.message}.<br>Bạn vẫn có thể xác nhận Lệnh.</div>`;
+      }
+    }
+
+    window.closeModal = function() {
+      document.getElementById('inventoryModal').style.display = 'none';
+      currentTaskId = null;
+    }
+
+    window.adjustQty = function(id, delta) {
+      const input = document.getElementById(`qty_${id}`);
+      const item = inventoryData.find(i => i.id === id);
+      if(!item) return;
+      
+      let val = parseInt(input.value) + delta;
+      if (val < 0) val = 0;
+      if (val > item.quantity) val = item.quantity;
+      input.value = val;
+    }
+
+    window.submitTaskCompletion = async function() {
+      if(!currentTaskId) return;
+
+      const btn = document.getElementById('btnSubmitTask');
+      btn.innerHTML = '<i data-lucide="loader-2" class="lucide-spin"></i> Đang xử lý...';
+      lucide.createIcons();
+      btn.disabled = true;
+
+      try {
+        // Cập nhật xuất kho
+        const promises = inventoryData.map(item => {
+          const usedInput = document.getElementById(`qty_${item.id}`);
+          if(!usedInput) return Promise.resolve();
+          const used = parseInt(usedInput.value);
+          
+          if (used > 0) {
+             return apiFetch('/relief-items/' + item.id, {
+               method: 'PUT',
+               body: JSON.stringify({ name: item.name, quantity: item.quantity - used })
+             }).catch(e => console.warn('Lỗi trừ kho item', item.id, e));
+          }
+          return Promise.resolve();
+        });
+        
+        await Promise.all(promises);
+
+        // Đóng dấu thành công
+        await apiFetch('/team/tasks/' + currentTaskId + '/status', { method: 'PATCH' });
+        
+        alert('🎉 Tuyệt vời! Mệnh lệnh đã được hoàn tất xuất sắc (Dữ liệu tiêu hao đã gửi lên kho chỉ huy).');
+        closeModal();
+        loadTasks(); 
+      } catch (error) {
+        alert('❌ Hệ thống bị gián đoạn: ' + error.message);
+      } finally {
+        btn.innerHTML = '<i data-lucide="check-circle-2"></i> Chốt Số & Hoàn Tất';
+        btn.disabled = false;
+        lucide.createIcons();
+      }
+    }
+
+    // Ngoại Cảnh logic
+    let currentExceptionImageBase64 = '';
+
+    window.openExceptionModal = function(taskId) {
+      currentTaskId = taskId;
+      document.getElementById('exceptionStatus').value = 'blocked';
+      document.getElementById('exceptionNote').value = '';
+      document.getElementById('exceptionFile').value = '';
+      document.getElementById('exceptionImgPreview').style.display = 'none';
+      currentExceptionImageBase64 = '';
+      document.getElementById('exceptionModal').style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    window.closeExceptionModal = function() {
+      document.getElementById('exceptionModal').style.display = 'none';
+      currentTaskId = null;
+    }
+
+    window.previewExceptionImage = function(event) {
+      const file = event.target.files[0];
+      if(!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        currentExceptionImageBase64 = e.target.result;
+        const img = document.getElementById('exceptionImgPreview');
+        img.src = currentExceptionImageBase64;
+        img.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    window.submitException = async function() {
+      if(!currentTaskId) return;
+      const btn = document.getElementById('btnSubmitException');
+      btn.innerHTML = '<i data-lucide="loader-2" class="lucide-spin"></i> Đang truyền tín hiệu...';
+      btn.disabled = true;
+      lucide.createIcons();
+
+      const payload = {
+        status: document.getElementById('exceptionStatus').value,
+        note: document.getElementById('exceptionNote').value || 'Không có mô tả',
+        image: currentExceptionImageBase64
+      };
+
+      try {
+        await apiFetch('/team/tasks/' + currentTaskId + '/exception', {
+          method: 'PATCH',
+          body: JSON.stringify(payload)
+        });
+        alert('🚨 Cổng trung tâm đã nhận được tín hiệu cầu cứu!');
+        closeExceptionModal();
+        loadTasks();
+      } catch (err) {
+        alert('❌ Lỗi mất kết nối sóng: ' + err.message);
+      } finally {
+        btn.innerHTML = '<i data-lucide="radio-tower"></i> Truyền Tín Hiệu Về Trạm';
+        btn.disabled = false;
+        lucide.createIcons();
+      }
+    }
+
+    loadTasks();
+  </script>
+</body>
+</html>
