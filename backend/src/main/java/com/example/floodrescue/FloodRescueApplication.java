@@ -1,4 +1,4 @@
-﻿package com.example.floodrescue;
+package com.example.floodrescue;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
