@@ -3,7 +3,6 @@ package com.example.floodrescue.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import javax.management.relation.Role;
 import java.time.LocalDateTime;
 
 @Entity
