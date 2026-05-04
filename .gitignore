@@ -1,4 +1,5 @@
-backend/target/
+.idea/
+.vscode/
+out/
+target/
 *.log
-*.class
-*.jar
