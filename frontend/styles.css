@@ -1,0 +1,118 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f7fb;
+  color: #1f2937;
+}
+
+header {
+  background: #0f4c81;
+  color: white;
+  padding: 16px 24px;
+}
+
+main {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px 40px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+input, select, textarea, button {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 6px 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+button {
+  background: #0f4c81;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #6b7280;
+}
+
+button.danger {
+  background: #dc2626;
+}
+
+.inline-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.inline-actions button {
+  width: auto;
+}
+
+.item {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #fafafa;
+}
+
+.small {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.row > * {
+  flex: 1;
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.nav a, .nav button {
+  width: auto;
+  background: white;
+  color: #0f4c81;
+  border: 1px solid rgba(255,255,255,0.4);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #111827;
+  color: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+}
