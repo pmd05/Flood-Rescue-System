@@ -1,66 +1,183 @@
-lood Rescue System - Hệ Thống Điều Phối Căn Cứ Cứu Hộ Lụt Bão
+# 🌊 Flood Rescue System
 
-Đây là mã nguồn đầy đủ của Hệ thống Điều phối Cứu hộ Khẩn cấp. Hệ thống được chia làm hai phần chính: **Backend** (xử lý logic, API tích hợp) và **Frontend** (giao diện người dùng Premium với bản đồ tương tác).
+### Hệ Thống Điều Phối Cứu Hộ Lụt Bão
 
-## 📋 Yều Cầu Hệ Thống (Prerequisites)
+## 📌 Giới thiệu
 
-Trước khi chạy dự án, máy tính của bạn cần cài đặt:
-1. **Java Development Kit (JDK 17 trở lên)**.
-2. **Apache Maven** (để build backend).
-3. **Microsoft SQL Server** (hệ quản trị cơ sở dữ liệu).
-4. **Visual Studio Code** (hoặc trình duyệt để chạy Frontend, khuyến nghị dùng extension *Live Server*).
+**Flood Rescue System** là hệ thống hỗ trợ điều phối cứu hộ trong tình huống khẩn cấp như lũ lụt, thiên tai.
+Hệ thống cho phép quản lý yêu cầu cứu trợ, phân công đội cứu hộ và theo dõi trạng thái xử lý theo thời gian thực.
 
----
+Dự án được xây dựng theo mô hình **Full-stack**:
 
-## ⚙️ Hướng Dẫn Cài Đặt & Chạy Dự Án
-
-### BƯỚC 1: Thiết Lập Cơ Sở Dữ Liệu (SQL Server)
-Hệ thống sử dụng SQL Server để lưu trữ toàn bộ dữ liệu. Bộ mã nguồn đã được cấu hình tự động tạo bảng (tự động hóa Hibernate), nên bạn chỉ cần tạo một Database rỗng là đủ.
-1. Mở **SQL Server Management Studio (SSMS)**.
-2. Chọn kết nối Database Engine bằng tài khoản `sa` (SQL Server Authentication).
-3. Chạy lệnh SQL sau để tạo Database:
-   ```sql
-   CREATE DATABASE flood_rescue_db;
-   ```
-4. Đảm bảo cấu hình SQL Server của bạn có thông tin đăng nhập khớp với tệp `backend/src/main/resources/application.properties` bảo gồm:
-   - Username: `sa`
-   - Password: `Sa@12345678` 
-   (*Nếu mật khẩu máy bạn khác, hãy sửa lại tệp `application.properties` cho khớp*).
-
-### BƯỚC 2: Khởi Động Máy Chủ (Backend Spring Boot)
-1. Mở Terminal (Command Prompt / PowerShell) và điều hướng vào thư mục backend:
-   ```bash
-   cd flood-rescue-system-core/backend
-   ```
-2. Build (biên dịch) toàn bộ mã nguồn sử dụng Maven:
-   ```bash
-   mvn clean package -DskipTests
-   ```
-3. Chạy máy chủ Spring Boot:
-   ```bash
-   mvn spring-boot:run
-   ```
-   > **Lưu ý:** Server sẽ chạy tại địa chỉ `http://localhost:8080`. Hãy chắc chắn cổng 8080 trên máy của bạn hiện đang không bị phần mềm khác khóa. Máy chủ cần được treo (chạy ngầm) trong suốt quá trình bạn dùng Frontend.
-
-### BƯỚC 3: Mở Giao Diện Người Dùng (Frontend)
-Frontend bao gồm các tệp HTML thuần kết hợp CSS/JS (không cần cài Node.js rườm rà). Bạn có hai cách để chạy:
-
-**Cách 1 (Khuyên Dùng - Tránh lỗi CORS tĩnh):**
-1. Mở thư mục `flood-rescue-system-core/frontend` bằng trình soạn thảo mã **Visual Studio Code (VS Code)**.
-2. Cài đặt tiện ích mở rộng (Extension) tên là **Live Server** của Ritwick Dey.
-3. Nhấn chuột phải vào tệp `login.html`, sau đó chọn `Open with Live Server`.
-4. Trình duyệt ảo sẽ lập tức bung ra giao diện.
-
-**Cách 2 (Mở trực tiếp):**
-Đi thẳng vào thư mục `frontend/` và nhấp đúp tệp (Double-Click) `login.html` để chạy trực tiếp trên trình duyệt Chrome/Edge của bạn.
+* 🔧 Backend: Spring Boot (REST API + JWT Security)
+* 🌐 Frontend: HTML, CSS, JavaScript
+* 🗄️ Database: SQL Server
 
 ---
 
-## 👥 Cấu Trúc Phân Quyền Vai Trò
-Sau khi khởi động lên, do CSDL mới tinh nên chưa có tài khoản. Hệ thống sử dụng cơ chế cấp quyền theo **Mã Đặc Vụ (Role)**. 
+## 🏗️ Kiến trúc hệ thống
 
-Bởi vì bạn cần khởi tạo dữ liệu ban đầu, bạn hãy gọi trực tiếp API hoặc thêm một dòng SQL insert đầu tiên cho một User Admin, sau đó sử dụng User admin này để khởi tạo thêm các tài khoản Citizen (Người Dân), Coordinator (Điều phối viên) hoặc Rescue_Team (Đội cấp cứu).
+```
+Flood-Rescue-System/
+│
+├── backend/        # Spring Boot API + Business Logic
+├── frontend/       # Giao diện người dùng
+├── database/       # Script SQL
+└── README.md
+```
 
-(Hãy tham khảo các API mapping trong thư mục Controller tại `backend` để tự do thao tác nhé).
+---
 
-Chúc bạn thành công! 🚀
+## ⚙️ Công nghệ sử dụng
+
+| Thành phần | Công nghệ             |
+| ---------- | --------------------- |
+| Backend    | Java, Spring Boot     |
+| Security   | JWT Authentication    |
+| Database   | SQL Server            |
+| Frontend   | HTML, CSS, JavaScript |
+| Build Tool | Maven                 |
+
+---
+
+## 📋 Yêu cầu hệ thống
+
+Trước khi chạy project, cần cài đặt:
+
+* Java JDK 17+
+* Apache Maven
+* SQL Server (SSMS)
+* Visual Studio Code (khuyến nghị)
+
+---
+
+## 🚀 Hướng dẫn chạy dự án
+
+### 🔹 1. Cấu hình Database
+
+Mở SQL Server và chạy:
+
+```sql
+CREATE DATABASE flood_rescue_db;
+```
+
+Cập nhật thông tin trong file:
+
+```
+backend/src/main/resources/application.properties
+```
+
+Ví dụ:
+
+```properties
+spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=flood_rescue_db
+spring.datasource.username=sa
+spring.datasource.password=YOUR_PASSWORD
+spring.jpa.hibernate.ddl-auto=update
+jwt.secret=your_secret_key
+```
+
+---
+
+### 🔹 2. Chạy Backend
+
+```bash
+cd backend
+mvn clean install
+mvn spring-boot:run
+```
+
+👉 Server chạy tại:
+
+```
+http://localhost:8080
+```
+
+---
+
+### 🔹 3. Chạy Frontend
+
+**Cách 1 (Khuyên dùng):**
+
+* Mở thư mục `frontend` bằng VS Code
+* Cài extension **Live Server**
+* Chuột phải `login.html` → *Open with Live Server*
+
+**Cách 2:**
+
+* Mở trực tiếp file `login.html` bằng trình duyệt
+
+---
+
+## 🔐 Xác thực & Phân quyền
+
+Hệ thống sử dụng **JWT Authentication**:
+
+### 🔑 Quy trình:
+
+1. User đăng nhập → nhận token
+2. Gửi token trong header:
+
+```
+Authorization: Bearer <token>
+```
+
+3. Backend xác thực token trước khi xử lý request
+
+---
+
+## 👥 Vai trò người dùng
+
+| Role        | Mô tả            |
+| ----------- | ---------------- |
+| Admin       | Quản lý hệ thống |
+| Coordinator | Điều phối cứu hộ |
+| Rescue Team | Đội cứu hộ       |
+| Citizen     | Người dân        |
+
+---
+
+## 📡 API cơ bản
+
+### 🔹 Đăng nhập
+
+```
+POST /api/auth/login
+```
+
+### 🔹 Gọi API có bảo mật
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## 📌 Tính năng chính
+
+* ✅ Quản lý yêu cầu cứu hộ
+* ✅ Phân công đội cứu hộ
+* ✅ Theo dõi trạng thái xử lý
+* ✅ Xác thực JWT
+* ✅ Phân quyền người dùng
+
+---
+
+## 📷 Demo
+
+> (Có thể thêm ảnh hoặc video demo tại đây)
+
+---
+
+## 🧹 Ghi chú
+
+* Không commit các file:
+
+  * `.idea`
+  * `.vscode`
+  * `target`
+  * `out`
+
+---
+
+🚀 **Chúc bạn demo thành công!**
